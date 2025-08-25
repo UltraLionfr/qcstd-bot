@@ -1,0 +1,130 @@
+# =========================
+# Configuration générale
+# =========================
+
+logsChannel: "1409149170131931237"
+
+# Liste des rôles qui auront les permissions "staff" (accès aux tickets, commandes /add /remove, etc.)
+# Tu peux mettre un seul rôle :
+# staffRoles:
+#   - "ID_DU_ROLE"
+#
+# Ou plusieurs rôles :
+# staffRoles:
+#   - "ID_ROLE_1"
+#   - "ID_ROLE_2"
+#   - "ID_ROLE_3"
+staffRoles:
+  - "1066466155574857884"
+
+# =========================
+# Configuration du panel de tickets
+# =========================
+TicketPanel:
+  Panel:
+    # Nom interne du panel (juste informatif, affiché dans les logs)
+    Name: "Support Panel"
+
+    # Channel textuel où le panel sera envoyé (un seul ID ici)
+    Channel: ["1409140845738856498"]
+
+    # Catégorie où seront créés les tickets
+    Categories: ["1368955351512387634"]
+
+    # Méthode d'interaction pour ouvrir un ticket :
+    # - "buttons" = un bouton par type de ticket
+    # - "select"  = un menu déroulant avec plusieurs choix
+    InteractionType: "buttons"
+
+    # =========================
+    # Paramètres de l'embed du panel
+    # =========================
+    Embed:
+      Title: "🎟️ Support Tickets"                  # Titre de l'embed
+      Description: "> Cliquez sur un bouton ou sélectionnez un type de ticket." 
+      Color: "#5e99ff"                             # Couleur de l'embed (hexadécimal ou int)
+      PanelImage: "https://i.imgur.com/wOifew6.png" # Image principale de l'embed
+      Timestamp: false                             # true = ajoute un timestamp, false = désactivé
+      Footer:
+        Enabled: true                              # Active/désactive le footer
+        Text: "QuantumCraft Studios"               # Texte affiché en bas de l'embed
+
+    # =========================
+    # Boutons du panel (si InteractionType = "buttons")
+    # =========================
+    Buttons:
+      - Label: "🎟️ Support Général"
+        Style: "Primary"
+        CustomId: "ticket_general"
+      - Label: "⚙️ Support Technique"
+        Style: "Secondary"
+        CustomId: "ticket_tech"
+      - Label: "💰 Facturation"
+        Style: "Success"
+        CustomId: "ticket_billing"
+
+    # =========================
+    # Menu déroulant (si InteractionType = "select")
+    # =========================
+    SelectMenu:
+      Placeholder: "Choisis le type de ticket..."
+      Options:
+        - Label: "🎟️ Support Général"
+          Value: "ticket_general"
+          Description: "Ouvrir un ticket général"
+        - Label: "⚙️ Support Technique"
+          Value: "ticket_tech"
+          Description: "Ouvrir un ticket technique"
+        - Label: "💰 Facturation"
+          Value: "ticket_billing"
+          Description: "Ouvrir un ticket lié à la facturation"
+
+  # =========================
+  # Configuration des Modals (formulaires)
+  # =========================
+  Modals:
+    ticket_general:
+      Enabled: true
+      Title: "Support Général"
+      Inputs:
+        - CustomId: "subject"
+          Label: "Sujet du ticket"
+          Style: "Short"
+          Required: true
+        - CustomId: "description"
+          Label: "Décris ton problème"
+          Style: "Paragraph"
+          Required: true
+
+    ticket_billing:
+      Enabled: true
+      Title: "Facturation"
+      Inputs:
+        - CustomId: "invoice"
+          Label: "ID de facture"
+          Style: "Short"
+          Required: true
+        - CustomId: "description"
+          Label: "Explique ton problème"
+          Style: "Paragraph"
+          Required: true
+
+    # Modal désactivé : le ticket sera créé directement sans formulaire
+    ticket_tech:
+      Enabled: false
+
+# =========================
+# Configuration des alertes de ticket
+# =========================
+TicketAlert:
+  Enabled: true    # true = active la commande /alert, false = désactive totalement la fonctionnalité
+  DMUser:  false    # true = envoie aussi une alerte en message privé à l'auteur du ticket (si ses MP sont ouverts)
+                   # false = aucune alerte en MP, uniquement dans le ticket
+  Time: "1m"       # durée avant la fermeture automatique du ticket après une alerte
+                   # ⚠️ format supporté :
+                   #   - "1m" = 1 minute
+                   #   - "10m" = 10 minutes
+                   #   - "1h" = 1 heure
+                   #   - "12h" = 12 heures
+                   #   - "1d" = 1 jour
+                   # Après ce délai, si personne n'annule le ticket se ferme automatiquement

@@ -1,0 +1,46 @@
+ticket:
+  already_open: "❌ Tu as déjà un ticket ouvert."
+  created: "✅ Ticket créé : {channel}"
+  greeting: "🎟️ Bonjour {user}, un membre du staff va bientôt te répondre."
+  closing: "⏳ Fermeture du ticket dans 5 secondes..."
+  closed: "✅ Ticket fermé avec succès."
+  not_in_ticket: "❌ Cette commande doit être utilisée dans un ticket."
+  no_permission: "❌ Tu n'as pas la permission de fermer ce ticket."
+  logs_message: "📝 Ticket fermé par {user} (ID: {userId})"
+
+errors:
+  generic: "❌ Une erreur est survenue."
+  not_found: "❌ Ressource introuvable."
+  db_error: "❌ Une erreur est survenue avec la base de données."
+  missing_config: "⚠️ Paramètre manquant dans config.yml."
+
+commands:
+  close:
+    description: "Fermer un ticket ouvert"
+    success: "✅ Le ticket sera fermé sous peu..."
+    error: "❌ Impossible de fermer ce ticket."
+  add:
+    description: "Ajouter un utilisateur à un ticket"
+    success: "✅ {user} a bien été ajouté au ticket."
+    already_added: "⚠️ {user} est déjà présent dans ce ticket."
+    welcome: "👋 Bienvenue {user}, tu as été ajouté à ce ticket."
+    error: "❌ Impossible d'ajouter cet utilisateur au ticket."
+  remove:
+    description: "Retirer un utilisateur du ticket"
+    success: "✅ {user} a bien été retiré du ticket."
+    not_in_ticket: "⚠️ {user} n'est pas présent dans ce ticket."
+    goodbye: "👋 {user} a été retiré de ce ticket."
+    error: "❌ Impossible de retirer cet utilisateur."
+  alert:
+    description: "Alerter l’auteur que le ticket va être fermé"
+    cancelled: "✅ La fermeture automatique du ticket a été annulée."
+    auto_cancelled: "✅ Réponse détectée, la fermeture automatique du ticket a été annulée."
+    dm_unreachable: "⚠️ Impossible d’envoyer un DM à l’auteur du ticket."
+    sent: "⏳ Une alerte de fermeture a été envoyée. Le ticket sera fermé {time} si aucune réponse n’est donnée. Inactivité détectée depuis {inactive-time}."
+    close_now_label: "🔴 Fermer maintenant"
+    cancel_label: "🚫 Annuler la fermeture"
+    close_confirm: "✅ Le ticket va être fermé immédiatement."
+
+permissions:
+  staff_only: "❌ Cette commande est réservée au staff."
+  user_only: "❌ Seuls les utilisateurs peuvent utiliser cette commande."
