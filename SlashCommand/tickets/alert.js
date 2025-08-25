@@ -39,7 +39,6 @@ module.exports = {
     const now = Date.now();
     const inactiveTime = `<t:${Math.floor(now / 1000)}:R>`;
 
-    // === Boutons ===
     const closeBtn = new ButtonBuilder()
       .setCustomId('closeTicket')
       .setLabel(lang.commands.alert.close_now_label || '🔒 Fermer maintenant')
@@ -60,7 +59,6 @@ module.exports = {
     const row1 = new ActionRowBuilder().addComponents(closeBtn, cancelBtn);
     const row2 = new ActionRowBuilder().addComponents(linkBtn);
 
-    // === Embed principal ===
     const alertEmbed = new EmbedBuilder()
       .setColor(0xe67e22)
       .setDescription(
@@ -85,7 +83,6 @@ module.exports = {
       )
       .setTimestamp();
 
-    // === Envoi DM si activé ===
     if (config.TicketAlert?.DMUser && ticket.userId) {
       const ticketCreator = await client.users
         .fetch(ticket.userId)
@@ -102,14 +99,12 @@ module.exports = {
       }
     }
 
-    // === Envoi dans le ticket (non éphémère) ===
     await interaction.reply({
       content: ticket.userId ? `<@${ticket.userId}>` : null,
       embeds: [alertEmbed],
       components: [row1],
     });
 
-    // === Planification de la fermeture auto ===
     scheduleTicketClosure(interaction.channel, alertDuration, async () => {
       closeTicket(interaction.channel.id);
       await interaction.channel.delete().catch(() => {});

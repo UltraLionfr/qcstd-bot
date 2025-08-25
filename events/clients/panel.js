@@ -37,7 +37,6 @@ module.exports = {
       );
     }
 
-    // === Embed principal ===
     const embed = new EmbedBuilder()
       .setTitle(panelConfig.Embed.Title || '')
       .setDescription(panelConfig.Embed.Description || '')
@@ -58,9 +57,7 @@ module.exports = {
 
     let row;
 
-    // === Gestion des interactions ===
     if (panelConfig.InteractionType === 'select' && panelConfig.SelectMenu) {
-      // 📌 Mode Select Menu
       const menu = new StringSelectMenuBuilder()
         .setCustomId('ticket_select')
         .setPlaceholder(
@@ -81,7 +78,6 @@ module.exports = {
 
       row = new ActionRowBuilder().addComponents(menu);
     } else {
-      // 📌 Mode Boutons par défaut
       row = new ActionRowBuilder();
       if (panelConfig.Buttons && Array.isArray(panelConfig.Buttons)) {
         for (const btn of panelConfig.Buttons) {
@@ -95,7 +91,6 @@ module.exports = {
       }
     }
 
-    // === Nettoyage & envoi ===
     await channel.bulkDelete(10).catch(() => {});
     await channel.send({ embeds: [embed], components: [row] });
 
