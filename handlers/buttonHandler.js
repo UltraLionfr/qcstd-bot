@@ -1,14 +1,16 @@
-const fs = require("fs");
-const path = require("path");
-const { Collection } = require("discord.js");
+const fs = require('fs');
+const path = require('path');
+const { Collection } = require('discord.js');
 
 function loadButtons(client) {
-  const interactionsPath = path.join(__dirname, "../interactions");
+  const interactionsPath = path.join(__dirname, '../interactions');
   client.buttons = new Collection();
 
   if (!fs.existsSync(interactionsPath)) return client.buttons;
 
-  const files = fs.readdirSync(interactionsPath).filter(f => f.endsWith(".js"));
+  const files = fs
+    .readdirSync(interactionsPath)
+    .filter((f) => f.endsWith('.js'));
 
   for (const file of files) {
     const button = require(path.join(interactionsPath, file));

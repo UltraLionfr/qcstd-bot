@@ -1,8 +1,8 @@
-const fs = require("fs");
-const path = require("path");
-const initSqlJs = require("sql.js");
+const fs = require('fs');
+const path = require('path');
+const initSqlJs = require('sql.js');
 
-const dbPath = path.join(__dirname, "../tickets.db");
+const dbPath = path.join(__dirname, '../tickets.db');
 
 let db;
 

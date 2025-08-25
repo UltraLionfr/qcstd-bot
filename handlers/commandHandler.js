@@ -1,6 +1,6 @@
-const fs = require("fs");
-const path = require("path");
-const { Collection } = require("discord.js");
+const fs = require('fs');
+const path = require('path');
+const { Collection } = require('discord.js');
 
 function walkCommands(dir, callback) {
   const files = fs.readdirSync(dir, { withFileTypes: true });
@@ -10,7 +10,7 @@ function walkCommands(dir, callback) {
 
     if (file.isDirectory()) {
       walkCommands(filePath, callback);
-    } else if (file.name.endsWith(".js")) {
+    } else if (file.name.endsWith('.js')) {
       const command = require(filePath);
       callback(command);
     }
@@ -18,7 +18,7 @@ function walkCommands(dir, callback) {
 }
 
 function loadCommands(client) {
-  const commandsPath = path.join(__dirname, "../SlashCommand");
+  const commandsPath = path.join(__dirname, '../SlashCommand');
   client.commands = new Collection();
 
   walkCommands(commandsPath, (command) => {
@@ -29,7 +29,7 @@ function loadCommands(client) {
 }
 
 function getCommandsJSON() {
-  const commandsPath = path.join(__dirname, "../SlashCommand");
+  const commandsPath = path.join(__dirname, '../SlashCommand');
   const commands = [];
 
   walkCommands(commandsPath, (command) => {

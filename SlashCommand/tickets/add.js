@@ -1,13 +1,14 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
-const { config, lang } = require("../../handlers/configLoader");
-const { getTicketByChannel } = require("../../handlers/database");
+const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
+const { config, lang } = require('../../handlers/configLoader');
+const { getTicketByChannel } = require('../../handlers/database');
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("add")
+    .setName('add')
     .setDescription(lang.commands.add.description)
-    .addUserOption(option =>
-      option.setName("utilisateur")
+    .addUserOption((option) =>
+      option
+        .setName('utilisateur')
         .setDescription("L'utilisateur à ajouter au ticket")
         .setRequired(true)
     ),
@@ -15,13 +16,16 @@ module.exports = {
   async execute(interaction) {
     const member = interaction.member;
 
-    const staffRoles = (Array.isArray(config.staffRoles) ? config.staffRoles : [config.staffRole || config.staffRoles])
-      .filter(r => r && r.trim() !== "");
+    const staffRoles = (
+      Array.isArray(config.staffRoles)
+        ? config.staffRoles
+        : [config.staffRole || config.staffRoles]
+    ).filter((r) => r && r.trim() !== '');
 
-    if (!staffRoles.some(roleId => member.roles.cache.has(roleId))) {
+    if (!staffRoles.some((roleId) => member.roles.cache.has(roleId))) {
       return interaction.reply({
         content: lang.permissions.staff_only,
-        flags: 64
+        flags: 64,
       });
     }
 
@@ -29,17 +33,21 @@ module.exports = {
     if (!ticket) {
       return interaction.reply({
         content: lang.ticket.not_in_ticket,
-        flags: 64
+        flags: 64,
       });
     }
 
-    const userToAdd = interaction.options.getUser("utilisateur");
+    const userToAdd = interaction.options.getUser('utilisateur');
 
-    const existingOverwrite = interaction.channel.permissionOverwrites.cache.get(userToAdd.id);
-    if (existingOverwrite && existingOverwrite.allow.has(PermissionFlagsBits.ViewChannel)) {
+    const existingOverwrite =
+      interaction.channel.permissionOverwrites.cache.get(userToAdd.id);
+    if (
+      existingOverwrite &&
+      existingOverwrite.allow.has(PermissionFlagsBits.ViewChannel)
+    ) {
       return interaction.reply({
-        content: lang.commands.add.already_added.replace("{user}", userToAdd),
-        flags: 64
+        content: lang.commands.add.already_added.replace('{user}', userToAdd),
+        flags: 64,
       });
     }
 
@@ -51,20 +59,19 @@ module.exports = {
       });
 
       await interaction.reply({
-        content: lang.commands.add.success.replace("{user}", userToAdd),
-        flags: 64
+        content: lang.commands.add.success.replace('{user}', userToAdd),
+        flags: 64,
       });
 
       await interaction.channel.send(
-        lang.commands.add.welcome.replace("{user}", userToAdd)
+        lang.commands.add.welcome.replace('{user}', userToAdd)
       );
-
     } catch (err) {
       console.error(err);
       await interaction.reply({
         content: lang.commands.add.error,
-        flags: 64
+        flags: 64,
       });
     }
-  }
+  },
 };

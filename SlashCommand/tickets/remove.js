@@ -1,13 +1,14 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
-const { config, lang } = require("../../handlers/configLoader");
-const { getTicketByChannel } = require("../../handlers/database");
+const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
+const { config, lang } = require('../../handlers/configLoader');
+const { getTicketByChannel } = require('../../handlers/database');
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("remove")
+    .setName('remove')
     .setDescription(lang.commands.remove.description)
-    .addUserOption(option =>
-      option.setName("utilisateur")
+    .addUserOption((option) =>
+      option
+        .setName('utilisateur')
         .setDescription("L'utilisateur à retirer du ticket")
         .setRequired(true)
     ),
@@ -15,13 +16,16 @@ module.exports = {
   async execute(interaction) {
     const member = interaction.member;
 
-    const staffRoles = (Array.isArray(config.staffRoles) ? config.staffRoles : [config.staffRole || config.staffRoles])
-      .filter(r => r && r.trim() !== "");
+    const staffRoles = (
+      Array.isArray(config.staffRoles)
+        ? config.staffRoles
+        : [config.staffRole || config.staffRoles]
+    ).filter((r) => r && r.trim() !== '');
 
-    if (!staffRoles.some(roleId => member.roles.cache.has(roleId))) {
+    if (!staffRoles.some((roleId) => member.roles.cache.has(roleId))) {
       return interaction.reply({
         content: lang.permissions.staff_only,
-        flags: 64
+        flags: 64,
       });
     }
 
@@ -29,17 +33,24 @@ module.exports = {
     if (!ticket) {
       return interaction.reply({
         content: lang.ticket.not_in_ticket,
-        flags: 64
+        flags: 64,
       });
     }
 
-    const userToRemove = interaction.options.getUser("utilisateur");
+    const userToRemove = interaction.options.getUser('utilisateur');
 
-    const existingOverwrite = interaction.channel.permissionOverwrites.cache.get(userToRemove.id);
-    if (!existingOverwrite || !existingOverwrite.allow.has(PermissionFlagsBits.ViewChannel)) {
+    const existingOverwrite =
+      interaction.channel.permissionOverwrites.cache.get(userToRemove.id);
+    if (
+      !existingOverwrite ||
+      !existingOverwrite.allow.has(PermissionFlagsBits.ViewChannel)
+    ) {
       return interaction.reply({
-        content: lang.commands.remove.not_in_ticket.replace("{user}", userToRemove),
-        flags: 64
+        content: lang.commands.remove.not_in_ticket.replace(
+          '{user}',
+          userToRemove
+        ),
+        flags: 64,
       });
     }
 
@@ -51,20 +62,19 @@ module.exports = {
       });
 
       await interaction.reply({
-        content: lang.commands.remove.success.replace("{user}", userToRemove),
-        flags: 64
+        content: lang.commands.remove.success.replace('{user}', userToRemove),
+        flags: 64,
       });
 
       await interaction.channel.send(
-        lang.commands.remove.goodbye.replace("{user}", userToRemove)
+        lang.commands.remove.goodbye.replace('{user}', userToRemove)
       );
-
     } catch (err) {
       console.error(err);
       await interaction.reply({
         content: lang.commands.remove.error,
-        flags: 64
+        flags: 64,
       });
     }
-  }
+  },
 };

@@ -1,10 +1,17 @@
-const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, PermissionFlagsBits, EmbedBuilder } = require("discord.js");
-const { getModal } = require("../handlers/modalHandler");
-const { createTicket } = require("../handlers/database");
-const { config } = require("../handlers/configLoader");
+const {
+  ModalBuilder,
+  TextInputBuilder,
+  TextInputStyle,
+  ActionRowBuilder,
+  PermissionFlagsBits,
+  EmbedBuilder,
+} = require('discord.js');
+const { getModal } = require('../handlers/modalHandler');
+const { createTicket } = require('../handlers/database');
+const { config } = require('../handlers/configLoader');
 
 module.exports = {
-  id: "ticket_select",
+  id: 'ticket_select',
   async execute(interaction, client) {
     const selected = interaction.values[0];
     const modalConfig = getModal(selected);
@@ -14,7 +21,8 @@ module.exports = {
       const member = interaction.member;
 
       const categories = config.TicketPanel.Panel.Categories;
-      const parentCategory = categories && categories.length > 0 ? categories[0] : null;
+      const parentCategory =
+        categories && categories.length > 0 ? categories[0] : null;
 
       const channel = await guild.channels.create({
         name: `ticket-${member.user.username}`.toLowerCase(),
@@ -27,37 +35,41 @@ module.exports = {
             allow: [
               PermissionFlagsBits.ViewChannel,
               PermissionFlagsBits.SendMessages,
-              PermissionFlagsBits.ReadMessageHistory
-            ]
+              PermissionFlagsBits.ReadMessageHistory,
+            ],
           },
-          ...config.staffRoles.map(roleId => ({
+          ...config.staffRoles.map((roleId) => ({
             id: roleId,
             allow: [
               PermissionFlagsBits.ViewChannel,
               PermissionFlagsBits.SendMessages,
-              PermissionFlagsBits.ReadMessageHistory
-            ]
-          }))
-        ]
+              PermissionFlagsBits.ReadMessageHistory,
+            ],
+          })),
+        ],
       });
 
       createTicket(member.id, channel.id);
 
       await interaction.reply({
         content: `✅ Ton ticket a été créé : ${channel}`,
-        flags: 64
+        flags: 64,
       });
 
-      await channel.send(`🎟️ Bonjour ${member}, un membre du staff va bientôt te répondre.`);
+      await channel.send(
+        `🎟️ Bonjour ${member}, un membre du staff va bientôt te répondre.`
+      );
 
-      const logChannel = await client.channels.fetch(config.logsChannel).catch(() => null);
+      const logChannel = await client.channels
+        .fetch(config.logsChannel)
+        .catch(() => null);
       if (logChannel) {
         const embed = new EmbedBuilder()
-          .setTitle("🎟️ Nouveau ticket (sans formulaire - via SelectMenu)")
+          .setTitle('🎟️ Nouveau ticket (sans formulaire - via SelectMenu)')
           .addFields(
-            { name: "Utilisateur", value: `${member.user.tag} (${member.id})` },
-            { name: "Salon", value: `${channel}` },
-            { name: "Type de ticket", value: selected }
+            { name: 'Utilisateur', value: `${member.user.tag} (${member.id})` },
+            { name: 'Salon', value: `${channel}` },
+            { name: 'Type de ticket', value: selected }
           )
           .setColor(0x2ecc71)
           .setTimestamp();
@@ -70,9 +82,9 @@ module.exports = {
 
     const modal = new ModalBuilder()
       .setCustomId(`ticket_modal_${selected}`)
-      .setTitle(modalConfig.Title || "Création de ticket");
+      .setTitle(modalConfig.Title || 'Création de ticket');
 
-    modalConfig.Inputs.forEach(input => {
+    modalConfig.Inputs.forEach((input) => {
       const textInput = new TextInputBuilder()
         .setCustomId(input.CustomId)
         .setLabel(input.Label)
@@ -83,5 +95,5 @@ module.exports = {
     });
 
     await interaction.showModal(modal);
-  }
+  },
 };

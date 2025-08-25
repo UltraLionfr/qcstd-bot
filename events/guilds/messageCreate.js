@@ -1,10 +1,10 @@
-const { getTicketByChannel } = require("../../handlers/database");
-const { cancelTicketClosure } = require("../../handlers/alertManager");
-const { lang } = require("../../handlers/configLoader");
-const { EmbedBuilder } = require("discord.js");
+const { getTicketByChannel } = require('../../handlers/database');
+const { cancelTicketClosure } = require('../../handlers/alertManager');
+const { lang } = require('../../handlers/configLoader');
+const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
-  name: "messageCreate",
+  name: 'messageCreate',
   once: false,
   async execute(message) {
     if (message.author.bot) return;
@@ -22,5 +22,5 @@ module.exports = {
         await message.channel.send({ embeds: [embed] });
       }
     }
-  }
+  },
 };

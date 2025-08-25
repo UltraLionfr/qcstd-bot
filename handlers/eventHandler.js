@@ -1,8 +1,8 @@
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
 function loadEvents(client) {
-  const eventsPath = path.join(__dirname, "../events");
+  const eventsPath = path.join(__dirname, '../events');
 
   function walk(dir) {
     const files = fs.readdirSync(dir, { withFileTypes: true });
@@ -12,7 +12,7 @@ function loadEvents(client) {
 
       if (file.isDirectory()) {
         walk(filePath);
-      } else if (file.name.endsWith(".js")) {
+      } else if (file.name.endsWith('.js')) {
         const event = require(filePath);
 
         if (event.once) {

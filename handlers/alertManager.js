@@ -1,6 +1,5 @@
 const activeAlerts = new Map();
 
-
 function scheduleTicketClosure(channel, duration, closeFn) {
   if (activeAlerts.has(channel.id)) {
     clearTimeout(activeAlerts.get(channel.id));

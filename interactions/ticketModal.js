@@ -1,17 +1,17 @@
-const { EmbedBuilder, PermissionFlagsBits } = require("discord.js");
-const { createTicket } = require("../handlers/database");
-const { config } = require("../handlers/configLoader");
+const { EmbedBuilder, PermissionFlagsBits } = require('discord.js');
+const { createTicket } = require('../handlers/database');
+const { config } = require('../handlers/configLoader');
 
 module.exports = {
   id: /^ticket_modal_.+$/,
   async execute(interaction, client) {
-    const originalId = interaction.customId.replace("ticket_modal_", "");
+    const originalId = interaction.customId.replace('ticket_modal_', '');
     const modalConfig = config.TicketPanel?.Modals?.[originalId];
 
     if (!modalConfig) {
       return interaction.reply({
-        content: "❌ Aucun formulaire configuré pour ce ticket.",
-        flags: 64
+        content: '❌ Aucun formulaire configuré pour ce ticket.',
+        flags: 64,
       });
     }
 
@@ -19,10 +19,12 @@ module.exports = {
     const guild = interaction.guild;
 
     const categories = config.TicketPanel.Panel.Categories;
-    const parentCategory = categories && categories.length > 0 ? categories[0] : null;
+    const parentCategory =
+      categories && categories.length > 0 ? categories[0] : null;
 
-    const staffRoles = (Array.isArray(config.staffRoles) ? config.staffRoles : [config.staffRoles])
-      .filter(r => r && r.trim() !== "");
+    const staffRoles = (
+      Array.isArray(config.staffRoles) ? config.staffRoles : [config.staffRoles]
+    ).filter((r) => r && r.trim() !== '');
 
     const overwrites = [
       { id: guild.id, deny: [PermissionFlagsBits.ViewChannel] },
@@ -31,9 +33,9 @@ module.exports = {
         allow: [
           PermissionFlagsBits.ViewChannel,
           PermissionFlagsBits.SendMessages,
-          PermissionFlagsBits.ReadMessageHistory
-        ]
-      }
+          PermissionFlagsBits.ReadMessageHistory,
+        ],
+      },
     ];
 
     for (const roleId of staffRoles) {
@@ -42,8 +44,8 @@ module.exports = {
         allow: [
           PermissionFlagsBits.ViewChannel,
           PermissionFlagsBits.SendMessages,
-          PermissionFlagsBits.ReadMessageHistory
-        ]
+          PermissionFlagsBits.ReadMessageHistory,
+        ],
       });
     }
 
@@ -51,46 +53,48 @@ module.exports = {
       name: `ticket-${member.user.username}`.toLowerCase(),
       type: 0,
       parent: parentCategory || undefined,
-      permissionOverwrites: overwrites
+      permissionOverwrites: overwrites,
     });
 
     createTicket(member.id, channel.id);
 
-    const fieldsOutput = modalConfig.Inputs.map(input => {
+    const fieldsOutput = modalConfig.Inputs.map((input) => {
       const value = interaction.fields.getTextInputValue(input.CustomId);
       return `**${input.Label}** : ${value}`;
-    }).join("\n");
+    }).join('\n');
 
     const embed = new EmbedBuilder()
-      .setTitle(`🎟️ ${modalConfig.Title || "Nouveau ticket"}`)
+      .setTitle(`🎟️ ${modalConfig.Title || 'Nouveau ticket'}`)
       .setDescription(`👤 Ouvert par: ${member}\n\n${fieldsOutput}`)
       .setColor(0x5e99ff)
       .setTimestamp();
 
     await channel.send({
-      content: staffRoles.map(r => `<@&${r}>`).join(" "),
-      embeds: [embed]
+      content: staffRoles.map((r) => `<@&${r}>`).join(' '),
+      embeds: [embed],
     });
 
     await interaction.reply({
       content: `✅ Ton ticket a été créé : ${channel}`,
-      flags: 64
+      flags: 64,
     });
 
-    const logChannel = await client.channels.fetch(config.logsChannel).catch(() => null);
+    const logChannel = await client.channels
+      .fetch(config.logsChannel)
+      .catch(() => null);
     if (logChannel) {
       const logEmbed = new EmbedBuilder()
-        .setTitle("🎟️ Nouveau ticket")
+        .setTitle('🎟️ Nouveau ticket')
         .setDescription(`Formulaire utilisé: \`${originalId}\``)
         .addFields(
-          { name: "Utilisateur", value: `${member.user.tag} (${member.id})` },
-          { name: "Salon", value: `${channel}` },
-          { name: "Réponses", value: fieldsOutput }
+          { name: 'Utilisateur', value: `${member.user.tag} (${member.id})` },
+          { name: 'Salon', value: `${channel}` },
+          { name: 'Réponses', value: fieldsOutput }
         )
         .setColor(0x2ecc71)
         .setTimestamp();
 
       await logChannel.send({ embeds: [logEmbed] });
     }
-  }
+  },
 };
