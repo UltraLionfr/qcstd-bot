@@ -1,0 +1,25 @@
+{
+  "name": "qcstd-bot",
+  "version": "1.0.0",
+  "description": "Bot discord pour l'hébergeur QuantumCraft Studios",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "UltraLion - https://ultralion.xyz",
+  "license": "ISC",
+  "packageManager": "pnpm@10.15.0",
+  "dependencies": {
+    "@dotenvx/dotenvx": "^1.49.0",
+    "chalk": "^4.1.2",
+    "discord.js": "^14.22.1",
+    "dotenv": "^17.2.1",
+    "sql.js": "^1.13.0",
+    "yaml": "^2.8.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
