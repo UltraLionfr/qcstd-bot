@@ -1,10 +1,7 @@
-const {
-  SlashCommandBuilder,
-  EmbedBuilder,
-  MessageFlags,
-} = require('discord.js');
-const { getTicketByChannel, closeTicket } = require('../../handlers/database');
-const { config, lang } = require('../../handlers/configLoader');
+const { SlashCommandBuilder, MessageFlags } = require('discord.js');
+const { getTicketByChannel } = require('../../handlers/database');
+const { lang } = require('../../handlers/configLoader');
+const { closeTicketWithTranscript } = require('../../handlers/ticketCloser');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -21,32 +18,10 @@ module.exports = {
       });
     }
 
-    closeTicket(interaction.channel.id);
-
     await interaction.reply(lang.ticket.closing);
 
-    // Log fermeture
-    const logChannel = await interaction.client.channels
-      .fetch(config.logsChannel)
-      .catch(() => null);
-    if (logChannel) {
-      const embed = new EmbedBuilder()
-        .setTitle('🔒 Ticket fermé')
-        .addFields(
-          { name: 'Salon', value: `${interaction.channel.name}`, inline: true },
-          {
-            name: 'Fermé par',
-            value: `${interaction.user.tag} (${interaction.user.id})`,
-            inline: true,
-          }
-        )
-        .setColor(0xe74c3c)
-        .setTimestamp();
-      logChannel.send({ embeds: [embed] });
-    }
-
-    setTimeout(() => {
-      interaction.channel.delete().catch(() => {});
+    setTimeout(async () => {
+      await closeTicketWithTranscript(interaction.channel, interaction.user);
     }, 5000);
   },
 };

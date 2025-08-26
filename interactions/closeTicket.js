@@ -1,6 +1,5 @@
-const { PermissionFlagsBits } = require('discord.js');
-const { closeTicket } = require('../handlers/database');
 const { config, lang } = require('../handlers/configLoader');
+const { closeTicketWithTranscript } = require('../handlers/ticketCloser');
 
 module.exports = {
   id: 'closeTicket',
@@ -17,13 +16,10 @@ module.exports = {
       });
     }
 
-    const channel = interaction.channel;
-
     await interaction.reply({ content: lang.ticket.closing });
 
     setTimeout(async () => {
-      closeTicket(channel.id);
-      await channel.delete().catch(() => {});
+      await closeTicketWithTranscript(interaction.channel, interaction.user);
     }, 5000);
   },
 };

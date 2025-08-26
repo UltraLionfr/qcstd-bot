@@ -5,7 +5,7 @@ const logger = require('../../handlers/logger');
 module.exports = {
   name: 'clientReady',
   once: true,
-  async execute(client) {
+  async execute() {
     const commands = getCommandsJSON();
     const rest = new REST({ version: '10' }).setToken(
       process.env.DISCORD_TOKEN

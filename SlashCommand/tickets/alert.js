@@ -6,8 +6,9 @@ const {
   ActionRowBuilder,
 } = require('discord.js');
 const { config, lang } = require('../../handlers/configLoader');
-const { getTicketByChannel, closeTicket } = require('../../handlers/database');
+const { getTicketByChannel } = require('../../handlers/database');
 const { scheduleTicketClosure } = require('../../handlers/alertManager');
+const { closeTicketWithTranscript } = require('../../handlers/ticketCloser');
 const ms = require('ms');
 
 module.exports = {
@@ -106,8 +107,7 @@ module.exports = {
     });
 
     scheduleTicketClosure(interaction.channel, alertDuration, async () => {
-      closeTicket(interaction.channel.id);
-      await interaction.channel.delete().catch(() => {});
+      await closeTicketWithTranscript(interaction.channel, interaction.user);
     });
   },
 };
