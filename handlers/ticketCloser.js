@@ -110,6 +110,10 @@ async function generateTranscript(channel, user) {
   const filePath = path.join(transcriptsDir, `${channel.id}.html`);
   fs.writeFileSync(filePath, html, 'utf8');
 
+  // === Lecture domaine/port depuis .env ===
+  const DOMAIN = process.env.TRANSCRIPT_DOMAIN || 'http://localhost';
+  const PORT = process.env.TRANSCRIPT_PORT || 3000;
+
   // Logs
   const logChannel = await channel.client.channels
     .fetch(config.logsChannel)
@@ -126,7 +130,7 @@ async function generateTranscript(channel, user) {
         },
         {
           name: 'Transcript',
-          value: `http://localhost:3000/transcript/${channel.id}`,
+          value: `${DOMAIN}:${PORT}/transcript/${channel.id}`,
         }
       )
       .setColor(0xe74c3c)

@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
+const { config } = require('../../handlers/configLoader');
 
 module.exports = {
   name: 'clientReady',
@@ -12,9 +13,7 @@ module.exports = {
     app.use('/transcript', express.static(transcriptsPath));
 
     app.get('/', (req, res) => {
-      res.send(
-        '✅ Serveur Transcript actif. Utilise /transcript/:id pour voir un ticket.'
-      );
+      res.send('✅ Serveur Transcript actif. Utilise /transcript/:id pour voir un ticket.');
     });
 
     app.get('/transcript/:id', (req, res) => {
@@ -27,8 +26,10 @@ module.exports = {
     });
 
     const PORT = process.env.TRANSCRIPT_PORT || 3000;
+    const DOMAIN = process.env.TRANSCRIPT_DOMAIN || 'http://localhost';
+
     app.listen(PORT, () => {
-      console.log(`🌐 Serveur Transcript dispo sur http://localhost:${PORT}`);
+      console.log(`🌐 Serveur Transcript dispo sur ${DOMAIN}:${PORT}`);
     });
   },
 };
