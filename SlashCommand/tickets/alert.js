@@ -107,7 +107,9 @@ module.exports = {
     });
 
     scheduleTicketClosure(interaction.channel, alertDuration, async () => {
-      await closeTicketWithTranscript(interaction.channel, interaction.user);
+      const channel = await client.channels.fetch(interaction.channel.id).catch(() => null);
+      if (!channel) return;
+      await closeTicketWithTranscript(channel, interaction.user);
     });
   },
 };
