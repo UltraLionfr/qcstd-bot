@@ -1,9 +1,9 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const cron = require("node-cron");
 const { config } = require("../../handlers/configLoader");
-const logger = require("../../handlers/logger"); // ✅ On utilise ton logger
+const logger = require("../../handlers/logger");
 
-// --- Fonction pour générer l'embed ---
+// Générer l'embed ---
 function generateScheduleEmbed() {
   const horaires = config.Schedule.Hours;
   const infoMessages = config.Schedule.InfoMessages || [];
@@ -54,9 +54,22 @@ module.exports = {
       return logger.error("❌ Impossible de trouver le salon défini dans config.Schedule.Channel");
     }
 
-    // Envoi initial
-    let sentMessage = await channel.send(generateScheduleEmbed());
-    logger.success("✅ Message des horaires envoyé avec succès");
+    let sentMessage;
+
+    try {
+      const messages = await channel.messages.fetch({ limit: 10 });
+      sentMessage = messages.find(m => m.author.id === client.user.id && m.embeds.length > 0 && m.embeds[0].title?.includes("Horaires d'ouverture"));
+
+      if (sentMessage) {
+        await sentMessage.edit(generateScheduleEmbed());
+        logger.success("✅ Message des horaires mis à jour (reboot)");
+      } else {
+        sentMessage = await channel.send(generateScheduleEmbed());
+        logger.success("✅ Nouveau message des horaires envoyé");
+      }
+    } catch (err) {
+      logger.error("❌ Erreur lors de la récupération/envoi du message des horaires :", err);
+    }
 
     // Mise à jour chaque jour à minuit
     cron.schedule("0 0 * * *", async () => {
@@ -65,7 +78,7 @@ module.exports = {
         logger.info("🔄 Message des horaires mis à jour (00h00)");
       } catch {
         sentMessage = await channel.send(generateScheduleEmbed());
-        logger.warn("⚠️ Ancien message supprimé, nouveau message envoyé pour les horaires");
+        logger.warn("⚠️ Ancien message introuvable, nouveau message envoyé pour les horaires");
       }
     });
 
