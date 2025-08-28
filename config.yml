@@ -128,3 +128,24 @@ TicketAlert:
                    #   - "12h" = 12 heures
                    #   - "1d" = 1 jour
                    # Après ce délai, si personne n'annule le ticket se ferme automatiquement
+
+
+# =========================
+# Horaires d'ouverture
+# =========================
+Schedule:
+  Channel: "1387043509600522360"   # ID du salon où envoyer l’embed
+  WebsiteURL: "https://quantumcraft-studios.com"
+  InfoMessages:
+    - "🔴 Le support peut avoir un délai de réponse prolongé durant le week-end."
+    - "✅ Aucune fermeture exceptionnelle prévue cette semaine."
+    - "📌 Mise à jour quotidienne automatique avec le jour actuel."
+
+  Hours:
+    Lundi: "09:00–12:00, 14:00–17:00"
+    Mardi: "09:00–12:00, 14:00–17:00"
+    Mercredi: "09:00–12:00, 14:00–17:00"
+    Jeudi: "09:00–12:00, 14:00–17:00"
+    Vendredi: "09:00–12:00, 14:00–17:00"
+    Samedi: "09:00–12:00, 14:00–17:00"
+    Dimanche: "09:00–12:00, 14:00–17:00"
