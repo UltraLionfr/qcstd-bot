@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const { config } = require('../../handlers/configLoader');
+const logger = require('../../handlers/logger');
 
 module.exports = {
   name: 'clientReady',
@@ -135,7 +136,7 @@ module.exports = {
     const DOMAIN = process.env.TRANSCRIPT_DOMAIN || 'http://localhost';
 
     app.listen(PORT, () => {
-      console.log(`🌐 Serveur Transcript dispo sur ${DOMAIN}:${PORT}`);
+      logger.success(`🌐 Serveur Transcript dispo sur ${DOMAIN}:${PORT}`);
     });
   },
 };
